@@ -1,29 +1,29 @@
 name: Sync SPMB ke Google Sheets
 
 on:
-  workflow_dispatch:  # Bisa manual klik di GitHub
+  workflow_dispatch:    # Manual trigger di GitHub UI
   schedule:
-    - cron: '0 7 * * *'  # Otomatis tiap hari jam 7 pagi (UTC)
+    - cron: '0 7 * * *'  # Otomatis tiap hari jam 7 pagi UTC
 
 jobs:
   run-sync:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
 
-      - name: Jalankan Sync Script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
-        run: |
-          echo "${GOOGLE_APPLICATION_CREDENTIALS}" > service_account.json
-          python sync_spmb.py
+    - name: Jalankan Sync Script
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+      run: |
+        echo "${GOOGLE_APPLICATION_CREDENTIALS}" > service_account.json
+        python sync_spmb.py
