@@ -6,12 +6,11 @@ from google.oauth2.service_account import Credentials
 from io import StringIO
 
 # === Setup credentials ===
-# Pastikan kamu punya JSON Service Account key
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 creds = Credentials.from_service_account_file("service_account.json", scopes=scopes)
 gc = gspread.authorize(creds)
 
-# === Baca file HTML lokal ===
+# === Baca file HTML ===
 with open("spmb.html", "r", encoding="utf-8") as f:
     html_content = f.read()
 
@@ -19,14 +18,13 @@ soup = BeautifulSoup(html_content, "html.parser")
 h4s = soup.find_all("h4")
 jurusan_headers = [h4.get_text(strip=True) for h4 in h4s[1:]]
 tables = pd.read_html(StringIO(html_content))
-
 print(f"Jumlah tabel: {len(tables)}")
 
-# === Buka Google Sheets by ID ===
+# === Buka Google Sheets ===
 spreadsheet_id = "1N8KHa7SfU-r228FGm3kvK8hK7hVJ2d0_gZ3h0V43NxI"
 spreadsheet = gc.open_by_key(spreadsheet_id)
 
-# === Hapus semua sheet kecuali 1 ===
+# === Hapus semua kecuali 1 sheet ===
 worksheets = spreadsheet.worksheets()
 if len(worksheets) > 1:
     for ws in worksheets[:-1]:
